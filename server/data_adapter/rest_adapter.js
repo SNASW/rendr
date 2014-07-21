@@ -129,7 +129,10 @@ RestAdapter.prototype.apiDefaults = function(api, req) {
   });
   
   // Include headers from the original request, except for client specific headers
-  var originalHeaders = req.headers || {};
+  var originalHeaders = {};
+  if(req && req.headers){
+    originalHeaders = req.headers;
+  }
   var clientSpecificHeaders = ['host', 'accept-encoding'];
   for(var header in originalHeaders) {
     if(clientSpecificHeaders.indexOf(header) === -1) {
