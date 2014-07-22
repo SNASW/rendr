@@ -140,9 +140,7 @@ ModelUtils.prototype.modelIdAttribute = function(modelName, callback) {
 };
 
 ModelUtils.prototype.deepApply = function(modelOrCollection, fn, seen) {
-  if(_.isUndefined(seen)) {
-    seen = [];
-  }
+  seen = seen || [];
   if(_.contains(seen, modelOrCollection)) {
     return modelOrCollection;
   }
