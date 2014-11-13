@@ -127,6 +127,18 @@ RestAdapter.prototype.apiDefaults = function(api, req) {
     url: url.format(urlOpts),
     headers: {}
   });
+  
+  // Include headers from the original request, except for client specific headers
+  var originalHeaders = {};
+  if(req && req.headers){
+    originalHeaders = req.headers;
+  }
+  var clientSpecificHeaders = ['host', 'accept-encoding'];
+  for(var header in originalHeaders) {
+    if(clientSpecificHeaders.indexOf(header) === -1) {
+      api.headers[header] = originalHeaders[header];
+    }
+  }
 
   // Add a default UserAgent, so some servers don't reject our request.
   if (api.headers['User-Agent'] == null) {

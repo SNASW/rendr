@@ -74,6 +74,8 @@ function serverSync(method, model, options) {
 
   if (verb === 'POST' || verb === 'PUT') {
     api.body = model.toJSON();
+  } else {
+    api.path = options.url;
   }
 
   req.dataAdapter.request(req, api, function(err, response, body) {

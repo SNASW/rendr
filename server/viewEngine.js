@@ -69,7 +69,7 @@ ViewEngine.prototype.getViewHtml = function getViewHtml(viewPath, locals, app) {
   return view.getHtml();
 };
 
-ViewEngine.prototype.getBootstrappedData = function getBootstrappedData(locals, app) {
+ViewEngine.prototype._getBootstrappedData = function _getBootstrappedData(locals, app) {
   var bootstrappedData = {};
 
   _.each(locals, function(modelOrCollection, name) {
@@ -81,6 +81,11 @@ ViewEngine.prototype.getBootstrappedData = function getBootstrappedData(locals, 
     }
   });
   return bootstrappedData;
+};
+
+ViewEngine.prototype.getBootstrappedData = function getBootstrappedData(locals, app) {
+  var data = this._getBootstrappedData(locals, app);
+  return app.modelUtils.deepEscape(data);
 };
 
 ViewEngine.prototype.clearCachedLayouts = function () {
