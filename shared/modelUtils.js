@@ -33,16 +33,20 @@ ModelUtils.prototype.getModel = function(path, attrs, options, callback) {
 };
 
 ModelUtils.prototype.getCollection = function(path, models, options, callback) {
-  var Collection;
+  var Collection, collectionInstance;
   models = models || [];
   options = options || {};
   if (typeof callback == 'function') {
     this.getCollectionConstructor(path, function(Collection) {
-      callback(new Collection(models, options));
+      collectionInstance = new Collection(models, options);
+      if(options.url) {collectionInstance.url = options.url;}
+      callback(collectionInstance);
     });
   } else {
     Collection = this.getCollectionConstructor(path);
-    return new Collection(models, options);
+    collectionInstance = new Collection(models, options);
+    if(options.url) {collectionInstance.url = options.url;}
+    return collectionInstance;
   }
 };
 
