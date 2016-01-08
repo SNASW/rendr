@@ -33,7 +33,7 @@ Our hypothesis is that there has to be a better way to build rich web apps today
 
 ## The Goals
 
-Rendr is intended to be a building block along the way to this envisionsed future of web apps that can be run on either side of the wire according to the needs of your application.
+Rendr is intended to be a building block along the way to this envisioned future of web apps that can be run on either side of the wire according to the needs of your application.
 
 Some specific design goals:
 
@@ -371,6 +371,8 @@ Rendr uses the native ECMAScript 5 methods `Array.prototype.map`, `Function.prot
 We'd love to see what the community can come up with! There are no doubt a number of developers who are tackling this same problem, and we can learn from each other. If you have a bug fix or feature proposal, submit a pull request with a clear description of the change, plus tests.
 
 Rendr was originally developed by [@braitz](https://github.com/braitz) and [@spikebrehm](https://github.com/spikebrehm), and now has a healthy list of [contributors](https://github.com/rendrjs/rendr/graphs/contributors).
+
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
 
 ## License
 

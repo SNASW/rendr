@@ -3,19 +3,19 @@
  * we need to pretend that this code is pure commonjs
  * means no AMD-style require calls
  */
-var requireAMD = require;
-
 var _ = require('underscore'),
     Backbone = require('backbone'),
     BaseRouter = require('../shared/base/router'),
     BaseView = require('../shared/base/view'),
-    $ = (typeof window !== 'undefined' && window.$) || require('jquery'),
+    isServer = (typeof window === 'undefined'),
     extractParamNamesRe = /:(\w+)/g,
     plusRe = /\+/g,
     firstRender = true,
     defaultRootPath = '';
 
-Backbone.$ = $;
+if (!isServer) {
+  Backbone.$ = window.$ || require('jquery');
+}
 
 module.exports = ClientRouter;
 
@@ -206,7 +206,7 @@ ClientRouter.prototype.redirectTo = function(path, options) {
 
   if (options.pushState === false) {
     // Do a full-page redirect.
-    window.location.href = path;
+    this.exitApp(path);
   } else {
     // Do a pushState navigation.
     hashParts = path.split('#');
@@ -223,6 +223,19 @@ ClientRouter.prototype.redirectTo = function(path, options) {
     this.navigate(path, options);
   }
 };
+
+ClientRouter.prototype.exitApp = function (path) {
+  var exitPath = this.noRelativePath(path);
+  window.location.href = exitPath;
+}
+
+ClientRouter.prototype.noRelativePath = function (path) {
+  //if path doesn't have a protocol and lacks a leading slash
+  if (/^[a-z]+:/i.test(path) === false && path.charAt(0) !== '/') {
+    path = '/' + path;
+  }
+  return path;
+}
 
 ClientRouter.prototype.handleErr = function(err, route) {
   this.trigger('action:error', err, route);

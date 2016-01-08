@@ -343,6 +343,56 @@ describe('fetcher', function() {
       fetcher.pendingFetches.should.eql(1);
     });
 
+    it("should propagate timeout option to model fetch", function(done) {
+      var timeoutSpy = sinon.spy();
+      var Test = BaseModel.extend({
+        jsonKey: 'timeout',
+        fetch: timeoutSpy
+      });
+      Test.id = 'Timeout';
+      addClassMapping.add('Timeout', Test);
+      var fetchSpec;
+
+      fetchSpec = {
+        model: {
+          model: 'Timeout',
+          params: {
+            id: 1
+          }
+        }
+      };
+
+      fetcher.fetch(fetchSpec, { timeout: 1000 }, function(err, results) { });
+      done();
+
+      timeoutSpy.should.be.calledWith(sinon.match({ timeout: 1000 }))
+    });
+
+    it("should set default timeout to 0 in options to model fetch", function(done) {
+      var timeoutSpy = sinon.spy();
+      var Test = BaseModel.extend({
+        jsonKey: 'timeout',
+        fetch: timeoutSpy
+      });
+      Test.id = 'Timeout';
+      addClassMapping.add('Timeout', Test);
+      var fetchSpec;
+
+      fetchSpec = {
+        model: {
+          model: 'Timeout',
+          params: {
+            id: 1
+          }
+        }
+      };
+
+      fetcher.fetch(fetchSpec, function(err, results) { });
+      done();
+
+      timeoutSpy.should.be.calledWith(sinon.match({ timeout: 0 }))
+    });
+
     it("should be able to fetch a collection", function(done) {
       var fetchSpec;
 
@@ -448,7 +498,7 @@ describe('fetcher', function() {
         done();
       });
       fetcher.pendingFetches.should.eql(1);
-    });    
+    });
 
     it("should be able to fetch both a model and a collection at the same time", function(done) {
       var fetchSpec;
@@ -777,6 +827,33 @@ describe('fetcher', function() {
       var result = fetcher.getCollectionForSpec(spec);
       expect(result.params).to.deep.equal(params);
       expect(result.options.params).to.deep.equal(params);
+    });
+  });
+
+  describe('fetchFromApi', function(done) {
+    var spec, options, callbackSpy, modelMock;
+
+    beforeEach(function () {
+      spec = { model: 'SomeModel' };
+      options = {readFromCache: false};
+      callbackSpy = sinon.spy();
+      modelMock = {fetch: sinon.spy()};
+    });
+
+    it('should call the getModelOrCollectionForSpec with callback', function (done) {
+      var lastCall, getModelOrCollectionForSpecStub = sinon.stub(fetcher, 'getModelOrCollectionForSpec');
+      getModelOrCollectionForSpecStub.callsArgWith(3, modelMock);
+
+      fetcher.fetchFromApi(spec, options, callbackSpy);
+
+      callbackSpy.should.have.not.been.called;
+
+      getModelOrCollectionForSpecStub.should.have.been.calledOnce;
+      getModelOrCollectionForSpecStub.should.have.been.calledWith(spec, null, options);
+
+      modelMock.fetch.should.have.been.calledOnce;
+
+      done();
     });
   });
 });
