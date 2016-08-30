@@ -7,15 +7,10 @@ var _ = require('underscore'),
     Backbone = require('backbone'),
     BaseRouter = require('../shared/base/router'),
     BaseView = require('../shared/base/view'),
-    isServer = (typeof window === 'undefined'),
     extractParamNamesRe = /:(\w+)/g,
     plusRe = /\+/g,
     firstRender = true,
     defaultRootPath = '';
-
-if (!isServer) {
-  Backbone.$ = window.$ || require('jquery');
-}
 
 module.exports = ClientRouter;
 

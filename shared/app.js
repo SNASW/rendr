@@ -8,12 +8,19 @@ var Backbone = require('backbone'),
     Fetcher = require('./fetcher'),
     ModelUtils = require('./modelUtils'),
     isServer = (typeof window === 'undefined'),
-    ClientRouter;
+    ClientRouter,
+    _$;
 
-if (!isServer) {
+if(isServer){
+  var jsdom = require('jsdom').jsdom;
+  var doc = jsdom('<html></html>', {});
+  _$ = require('jquery')(doc.defaultView);
+} else {
   ClientRouter = require('app/router');
-  Backbone.$ = window.$ || require('jquery');
+  _$ = require('jquery');
 }
+
+global.$ = $ = jQuery = _$;
 
 module.exports = Backbone.Model.extend({
 
