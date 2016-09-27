@@ -18,6 +18,7 @@ if(isServer){
 } else {
   ClientRouter = require('app/router');
   _$ = require('jquery');
+  global = window;
 }
 
 global.$ = $ = jQuery = _$;
